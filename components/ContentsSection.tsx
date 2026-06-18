@@ -43,7 +43,7 @@ export default function ContentsSection() {
     >
       <div className="max-w-xl w-full flex flex-col items-center text-center space-y-12">
         <h2 className="font-display text-[12vw] md:text-[8vw] text-[#F5F5F0] leading-none">
-          CoNTENTS
+          pRoJeCTS
         </h2>
 
         <motion.div

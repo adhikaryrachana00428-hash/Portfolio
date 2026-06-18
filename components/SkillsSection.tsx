@@ -61,13 +61,13 @@ export default function SkillsSection() {
         >
           {/* Column 1 */}
           <div className="flex flex-col space-y-8">
-            {/* Computer Languages */}
+            {/* Languages */}
             <motion.div variants={itemVariants} className="flex flex-col space-y-2">
               <span className="font-mono text-xs md:text-sm tracking-widest text-[#C8B89A] uppercase">
-                [ Computer Languages ]
+                [ languages ]
               </span>
               <span className="font-body text-xl md:text-2xl text-[#F5F5F0]/90">
-                HTML, Python, Rust, CSS, JavaScript
+                HTML, Python, CSS, JavaScript
               </span>
             </motion.div>
 
@@ -78,16 +78,6 @@ export default function SkillsSection() {
               </span>
               <span className="font-body text-xl md:text-2xl text-[#F5F5F0]/90">
                 Tailwind, React, Framer Motion, Django
-              </span>
-            </motion.div>
-
-            {/* Databases & Data Tools */}
-            <motion.div variants={itemVariants} className="flex flex-col space-y-2">
-              <span className="font-mono text-xs md:text-sm tracking-widest text-[#C8B89A] uppercase">
-                [ Databases & Data Tools ]
-              </span>
-              <span className="font-body text-xl md:text-2xl text-[#F5F5F0]/90">
-                Firebase
               </span>
             </motion.div>
           </div>
@@ -101,16 +91,6 @@ export default function SkillsSection() {
               </span>
               <span className="font-body text-xl md:text-2xl text-[#F5F5F0]/90">
                 Git and GitHub, Docker
-              </span>
-            </motion.div>
-
-            {/* Courses */}
-            <motion.div variants={itemVariants} className="flex flex-col space-y-2">
-              <span className="font-mono text-xs md:text-sm tracking-widest text-[#C8B89A] uppercase">
-                [ Courses ]
-              </span>
-              <span className="font-body text-xl md:text-2xl text-[#F5F5F0]/90">
-                Data Structures
               </span>
             </motion.div>
 
