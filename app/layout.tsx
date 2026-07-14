@@ -39,15 +39,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${caveatFont.variable} ${garamondFont.variable} ${jetbrainsFont.variable} bg-[#0A0A0A] text-[#F5F5F0] antialiased selection:bg-[#C8B89A] selection:text-[#0A0A0A] overflow-x-hidden relative`}
+        className={`${caveatFont.variable} ${garamondFont.variable} ${jetbrainsFont.variable} bg-[#dfdcd6] text-black antialiased selection:bg-[#000080] selection:text-white overflow-x-hidden relative`}
       >
-        {/* Physical textured paper grain overlay */}
-        <svg className="fixed inset-0 pointer-events-none opacity-[0.22] z-50 w-full h-full mix-blend-overlay">
-          <filter id="paper-noise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" stitchTiles="stitch" />
-            <feColorMatrix type="matrix" values="0 0 0 0 0.96   0 0 0 0 0.96   0 0 0 0 0.94  0 0 0 0.15 0" />
+        {/* Extreme CRT digital grain overlay for max retro texture */}
+        <svg className="fixed inset-0 pointer-events-none opacity-[0.42] z-[9999] w-full h-full mix-blend-overlay">
+          <filter id="analog-grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="3" stitchTiles="stitch" />
           </filter>
-          <rect width="100%" height="100%" filter="url(#paper-noise)" />
+          <rect width="100%" height="100%" filter="url(#analog-grain)" />
         </svg>
 
         {children}

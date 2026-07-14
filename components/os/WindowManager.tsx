@@ -42,9 +42,22 @@ export default function WindowManager() {
           content = <ProjectDetailView projectId={win.id} />;
         }
 
+        // Determine padding, background, and scrolling style depending on window type
+        let bodyClass = "w-full h-full min-h-0 overflow-auto text-black ";
+        if (win.id === "about" || win.id === "timeline" || win.id === "open-source") {
+          // Notepad documents: white background, black text, sunken border
+          bodyClass += "bg-white win95-sunken p-6 font-mono select-text";
+        } else if (win.id === "projects" || win.id.startsWith("project-")) {
+          // Windows Explorer panels: white background, sunken border
+          bodyClass += "bg-white win95-sunken select-none";
+        } else {
+          // Standard properties dialog box or custom controls: gray background
+          bodyClass += "bg-[#c0c0c0] p-4 select-none";
+        }
+
         return (
           <DesktopWindow key={win.id} windowState={win}>
-            <div className="w-full h-full min-h-0 bg-[#0A0A0A]">{content}</div>
+            <div className={bodyClass}>{content}</div>
           </DesktopWindow>
         );
       })}

@@ -1,9 +1,27 @@
 "use client";
 
+import React from "react";
 import { useThemeOS } from "./ThemeController";
-import { Folder } from "lucide-react";
 
 export const PROJECTS_LIST = [
+  {
+    id: "project-hotdog",
+    name: "HotDog",
+    date: "JUNE 2026",
+    tech: "Python · Gemini · HTML/CSS/JS",
+    desc: "An AI-powered engineering intelligence platform that reverse-engineers software projects into structured blueprints. Features repository analysis, workflow reconstruction, architecture visualization, and personalized learning roadmaps using Gemini/Antigravity API.",
+    link: "https://github.com/adhikaryrachana00428-hash",
+    linkLabel: "→ GitHub",
+  },
+  {
+    id: "project-debae",
+    name: "DeBae",
+    date: "JUNE 2026",
+    tech: "Python · FastAPI · Next.js · Gemini",
+    desc: "A multi-agent AI debate platform enabling AI experts to discuss topics from diverse perspectives. Winner of the AMD AI Hackathon. Features distinct AI personas, moderator orchestration, multi-turn debates, and AI summarization.",
+    link: "https://github.com/adhikaryrachana00428-hash",
+    linkLabel: "→ GitHub",
+  },
   {
     id: "project-teleport",
     name: "Teleport",
@@ -12,17 +30,6 @@ export const PROJECTS_LIST = [
     desc: "A high-performance, cross-platform file transfer utility built in Rust. It utilizes an optimized custom transfer protocol to move directory hierarchies instantly across localized network nodes with checksum verification.",
     link: "https://gitlab.com/uniquepersun/teleport",
     linkLabel: "→ GitLab",
-    svg: (
-      <svg viewBox="0 0 200 200" className="w-24 h-24 stroke-current fill-none text-[#F5F5F0]" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M 40 130 L 70 130 L 75 145 L 35 145 Z" />
-        <path d="M 45 130 L 45 95 L 65 95 L 65 130" />
-        <path d="M 130 130 L 160 130 L 165 145 L 125 145 Z" />
-        <path d="M 135 130 L 135 95 L 155 95 L 155 130" />
-        <path d="M 70 110 C 90 90, 110 130, 130 110" />
-        <path d="M 85 85 L 95 85 L 95 98 L 85 98 Z" />
-        <path d="M 105 115 L 115 115 L 115 128 L 105 128 Z" />
-      </svg>
-    ),
   },
   {
     id: "project-deception",
@@ -32,19 +39,6 @@ export const PROJECTS_LIST = [
     desc: "A simulation environment exploring RL agent behavior. Models how autonomous agents develop deceptive strategies to maximize rewards in collaborative scenarios, offering visual diagnostic run data.",
     link: "https://github.com/adhikaryrachana00428-hash/Agent-deception-lab",
     linkLabel: "→ GitHub",
-    svg: (
-      <svg viewBox="0 0 200 200" className="w-24 h-24 stroke-current fill-none text-[#F5F5F0]" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M 30 70 L 75 70 L 75 110 L 30 110 Z" />
-        <path d="M 40 85 C 40 80, 48 80, 48 85 M 57 85 C 57 80, 65 80, 65 85" />
-        <path d="M 45 98 L 60 98" />
-        <path d="M 52 70 L 52 55 M 49 55 A 3 3 0 1 1 55 55" />
-        <path d="M 120 75 L 165 75 L 165 115 L 120 115 Z" />
-        <path d="M 130 90 C 130 85, 138 85, 138 90 M 147 90 C 147 85, 155 85, 155 90" />
-        <path d="M 135 102 C 140 105, 150 105, 155 102" />
-        <path d="M 142 75 L 142 60 M 139 60 A 3 3 0 1 1 145 60" />
-        <path d="M 165 100 Q 180 100, 185 95 M 180 85 L 188 95 L 178 105" />
-      </svg>
-    ),
   },
   {
     id: "project-prompt",
@@ -54,16 +48,6 @@ export const PROJECTS_LIST = [
     desc: "An automated testbed designed to verify input constraints on LLM instances. Validates instructions and detects adversarial drift using real-time structural schema compliance tracking.",
     link: "https://github.com/adhikaryrachana00428-hash/Prompt-verification",
     linkLabel: "→ GitHub",
-    svg: (
-      <svg viewBox="0 0 200 200" className="w-24 h-24 stroke-current fill-none text-[#F5F5F0]" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M 40 50 L 160 50" />
-        <path d="M 40 75 L 140 75" />
-        <path d="M 40 100 L 150 100" />
-        <path d="M 40 125 L 110 125" />
-        <path d="M 125 100 A 25 25 0 1 1 75 100 A 25 25 0 1 1 125 100" />
-        <path d="M 115 118 L 145 148" />
-      </svg>
-    ),
   },
   {
     id: "project-code",
@@ -73,19 +57,6 @@ export const PROJECTS_LIST = [
     desc: "A source code complexity scanner that parses source files into Abstract Syntax Trees. Identifies hot paths, deep nesting structures, and cognitive overhead loops using custom parser targets.",
     link: "https://github.com/adhikaryrachana00428-hash/Code-Analyzer-",
     linkLabel: "→ GitHub",
-    svg: (
-      <svg viewBox="0 0 200 200" className="w-24 h-24 stroke-current fill-none text-[#F5F5F0]" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M 100 40 A 10 10 0 1 1 80 40 A 10 10 0 1 1 100 40" />
-        <path d="M 90 50 L 60 90" />
-        <path d="M 90 50 L 140 90" />
-        <path d="M 70 100 A 10 10 0 1 1 50 100 A 10 10 0 1 1 70 100" />
-        <path d="M 150 100 A 10 10 0 1 1 130 100 A 10 10 0 1 1 150 100" />
-        <path d="M 60 110 L 40 145" />
-        <path d="M 60 110 L 80 145" />
-        <path d="M 50 155 A 8 8 0 1 1 34 155 A 8 8 0 1 1 50 155" />
-        <path d="M 90 155 A 8 8 0 1 1 74 155 A 8 8 0 1 1 90 155" />
-      </svg>
-    ),
   },
   {
     id: "project-none",
@@ -97,19 +68,20 @@ export const PROJECTS_LIST = [
     linkLabel: "→ GitHub",
     demoLink: "https://adhikaryrachana00428-hash.itch.io/and-then-there-were-none",
     demoLinkLabel: "→ Play Demo",
-    svg: (
-      <svg viewBox="0 0 200 200" className="w-24 h-24 stroke-current fill-none text-[#F5F5F0]" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M 50 150 L 70 150 L 70 100 L 50 100 Z" />
-        <path d="M 60 100 C 55 90, 60 80, 60 75 C 60 80, 65 90, 60 100" />
-        <path d="M 140 100 A 25 25 0 1 1 90 100 A 25 25 0 1 1 140 100" />
-        <path d="M 115 100 L 115 88 M 115 100 L 128 105" />
-        <path d="M 90 25 L 140 25 L 140 65 L 90 65 Z" />
-        <path d="M 115 25 L 115 65 M 90 45 L 140 45" />
-        <path d="M 95 30 L 90 40 M 125 30 L 120 40 M 105 50 L 100 60 M 130 50 L 125 60" />
-      </svg>
-    ),
   },
 ];
+
+// Helper to render the classic pixelated yellow folder
+const RetroFolderIcon = () => (
+  <svg viewBox="0 0 32 32" className="w-12 h-12 select-none pointer-events-none">
+    {/* Tab */}
+    <path d="M 2 6 L 12 6 L 15 10 L 2 10 Z" fill="#d8a838" stroke="#000" strokeWidth="1.2" strokeLinejoin="miter" />
+    {/* Back flap */}
+    <path d="M 2 10 L 30 10 L 30 25 L 2 25 Z" fill="#b08020" stroke="#000" strokeWidth="1.2" strokeLinejoin="miter" />
+    {/* Front flap (slightly shifted to look 3D open) */}
+    <path d="M 2 12 L 28 12 L 27 25 L 2 25 Z" fill="#ffc840" stroke="#000" strokeWidth="1.2" strokeLinejoin="miter" />
+  </svg>
+);
 
 export default function ProjectsFolderView() {
   const { openWindow } = useThemeOS();
@@ -122,26 +94,59 @@ export default function ProjectsFolderView() {
   };
 
   return (
-    <div className="p-8 select-none">
-      <h2 className="font-display text-3xl text-[#C8B89A] mb-8 border-b border-[#2D2D2A] pb-3 italic">
-        projects folder
-      </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8">
-        {PROJECTS_LIST.map((proj) => (
-          <button
-            key={proj.id}
-            onClick={() => handleOpenProject(proj.id, proj.name)}
-            className="flex flex-col items-center p-4 rounded-xl border border-transparent hover:border-[#C8B89A]/20 hover:bg-[#222220]/40 transition-all duration-300 group cursor-pointer"
-          >
-            <div className="w-16 h-16 text-[#C8B89A] flex items-center justify-center relative mb-3 group-hover:scale-105 transition-transform duration-300">
-              <Folder className="w-full h-full fill-[#C8B89A]/10" strokeWidth={1.5} />
-            </div>
-            <span className="font-body text-center text-sm font-medium text-[#F5F5F0]/95 group-hover:text-accent transition-colors">
-              {proj.name}
-            </span>
-          </button>
-        ))}
+    <div className="w-full h-full flex flex-col bg-[#c0c0c0] font-sans text-xs">
+      
+      {/* 1. Classic Windows Explorer Menu Bar */}
+      <div className="bg-[#c0c0c0] border-b border-[#808080] py-0.5 px-2 flex space-x-4 select-none shrink-0 font-medium">
+        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">File</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">Edit</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">View</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">Go</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">Favorites</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">Help</span>
       </div>
+
+      {/* 2. File Path bar */}
+      <div className="bg-[#c0c0c0] border-b border-[#808080] p-1 flex items-center space-x-2 shrink-0 select-none">
+        <span className="text-[#808080] pl-2">Address:</span>
+        <div className="flex-1 bg-white border border-[#808080] px-2 py-0.5 win95-sunken text-black truncate font-mono">
+          C:\MyDocuments\Projects
+        </div>
+      </div>
+
+      {/* 3. Main Folder Grid Contents */}
+      <div className="flex-1 bg-white overflow-auto p-6 win95-sunken m-1">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+          {PROJECTS_LIST.map((proj) => (
+            <button
+              key={proj.id}
+              onClick={() => handleOpenProject(proj.id, proj.name)}
+              className="flex flex-col items-center p-2 border border-transparent hover:border-dotted hover:border-black/50 hover:bg-[#000080]/5 focus:bg-[#000080] focus:text-white group cursor-pointer w-24 outline-none"
+            >
+              <div className="mb-2">
+                <RetroFolderIcon />
+              </div>
+              <span className="font-sans text-[11px] text-center font-bold tracking-wide leading-tight group-focus:text-white">
+                {proj.name}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Explorer Status Bar */}
+      <div className="h-5 bg-[#c0c0c0] border-t border-[#dfdfdf] flex items-center justify-between px-3 select-none text-[10px] shrink-0 font-medium font-sans">
+        <div className="flex items-center space-x-2 border-r border-[#808080] pr-6 flex-1">
+          <span>{PROJECTS_LIST.length} object(s)</span>
+        </div>
+        <div className="flex items-center space-x-2 border-r border-[#808080] px-6 shrink-0">
+          <span>My Computer</span>
+        </div>
+        <div className="pl-6 shrink-0 text-right w-16">
+          <span>14.2 KB</span>
+        </div>
+      </div>
+
     </div>
   );
 }

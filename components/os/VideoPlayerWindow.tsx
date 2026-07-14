@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Film } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function VideoPlayerWindow() {
   const [videoExists, setVideoExists] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Check if the video file is present
     fetch("/assets/videos/Me.mp4", { method: "HEAD" })
       .then((res) => {
         if (res.ok) {
@@ -25,41 +26,125 @@ export default function VideoPlayerWindow() {
       });
   }, []);
 
+  const handlePlayPause = () => {
+    if (!videoRef.current) return;
+    if (playing) {
+      videoRef.current.pause();
+      setPlaying(false);
+    } else {
+      videoRef.current.play().then(() => {
+        setPlaying(true);
+      }).catch(err => console.warn(err));
+    }
+  };
+
+  const handleStop = () => {
+    if (!videoRef.current) return;
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
+    setPlaying(false);
+    setProgress(0);
+  };
+
+  const handleTimeUpdate = () => {
+    if (!videoRef.current) return;
+    const current = videoRef.current.currentTime;
+    const duration = videoRef.current.duration || 1;
+    setProgress((current / duration) * 100);
+  };
+
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-[#161614] select-none text-center">
-      {checking ? (
-        <div className="font-mono text-sm text-[#C8B89A] animate-pulse">
-          Loading player...
-        </div>
-      ) : videoExists ? (
-        <div className="w-full max-w-2xl bg-[#0A0A09] rounded-xl overflow-hidden border border-[#2D2D2A] shadow-inner">
+    <div className="w-full h-full bg-[#c0c0c0] font-sans text-xs text-black flex flex-col p-1">
+      {/* 1. WMP Menu Bar */}
+      <div className="bg-[#c0c0c0] border-b border-[#808080] py-0.5 px-2 flex space-x-4 select-none shrink-0 font-medium font-sans">
+        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">File</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Play</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Favorites</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Go</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Help</span>
+      </div>
+
+      {/* 2. Video Frame Sunken screen */}
+      <div className="flex-1 bg-black win95-sunken m-1 flex flex-col items-center justify-center relative overflow-hidden">
+        {checking ? (
+          <div className="font-mono text-xs text-[#00ff00] animate-pulse">
+            LOADING DEVICE DRIVER...
+          </div>
+        ) : videoExists ? (
           <video
+            ref={videoRef}
             src="/assets/videos/Me.mp4"
-            controls
-            className="w-full h-auto aspect-video object-contain"
-            autoPlay
+            onTimeUpdate={handleTimeUpdate}
+            className="w-full h-full object-contain"
+            onEnded={() => setPlaying(false)}
           />
+        ) : (
+          <div className="flex flex-col items-center text-center p-4 max-w-xs">
+            {/* Visualizer fallback */}
+            <div className="w-32 h-16 border border-green-800 flex items-end justify-between p-1 bg-black overflow-hidden mb-4">
+              <span className="w-2 bg-green-500 animate-[pulse_0.8s_infinite]" style={{ height: "40%" }} />
+              <span className="w-2 bg-green-500 animate-[pulse_1.2s_infinite]" style={{ height: "70%" }} />
+              <span className="w-2 bg-green-500 animate-[pulse_0.6s_infinite]" style={{ height: "90%" }} />
+              <span className="w-2 bg-green-500 animate-[pulse_1.0s_infinite]" style={{ height: "50%" }} />
+              <span className="w-2 bg-green-500 animate-[pulse_0.9s_infinite]" style={{ height: "80%" }} />
+              <span className="w-2 bg-green-500 animate-[pulse_0.7s_infinite]" style={{ height: "30%" }} />
+            </div>
+
+            <span className="font-bold text-red-500 mb-1 text-[11px]">ERROR 404: FILE NOT FOUND</span>
+            <span className="text-gray-400 font-mono text-[9px] uppercase">
+              assets/videos/Me.mp4
+            </span>
+            <p className="text-gray-300 text-[10px] mt-2 leading-relaxed">
+              Introduction video coming soon. Explore the other workspace applications in the meantime!
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* 3. Controls Panel */}
+      <div className="p-1.5 bg-[#c0c0c0] flex flex-col space-y-2 select-none shrink-0">
+        
+        {/* Slider bar */}
+        <div className="flex items-center space-x-2">
+          <div className="flex-1 h-4 bg-white win95-sunken relative flex items-center p-0.5">
+            {/* Progress bar inside slider */}
+            <div 
+              className="bg-[#000080] h-full transition-all duration-75"
+              style={{ width: `${progress}%` }}
+            />
+            {/* Slider thumb */}
+            <div 
+              className="w-3 h-full bg-[#c0c0c0] win95-raised absolute border border-gray-400"
+              style={{ left: `calc(${progress}% - 6px)`, transition: "all 0.075s" }}
+            />
+          </div>
         </div>
-      ) : (
-        <div className="flex flex-col items-center max-w-sm">
-          {/* Cozy media player fallback visual */}
-          <div className="w-20 h-20 rounded-full border-2 border-dashed border-[#C8B89A]/40 flex items-center justify-center text-[#C8B89A]/60 mb-6 bg-[#222220]/30 animate-pulse">
-            <Film className="w-8 h-8" />
+
+        {/* Play/Pause buttons */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-1">
+            <button
+              onClick={handlePlayPause}
+              disabled={!videoExists}
+              className={`win95-button w-12 py-1 font-bold text-[10px] ${!videoExists ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+            >
+              {playing ? "Pause" : "Play"}
+            </button>
+            <button
+              onClick={handleStop}
+              disabled={!videoExists}
+              className={`win95-button w-12 py-1 font-bold text-[10px] ${!videoExists ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+            >
+              Stop
+            </button>
           </div>
 
-          <h3 className="font-display text-3xl text-[#F5F5F0] mb-2 italic">
-            Welcome Video
-          </h3>
-          
-          <p className="font-body text-[#F5F5F0]/70 leading-relaxed mb-6">
-            Introduction video coming soon. In the meantime, feel free to explore the other apps in this workspace!
-          </p>
-
-          <div className="font-mono text-[10px] text-[#C8B89A] tracking-wider uppercase border border-[#C8B89A]/20 px-3 py-1.5 rounded-md bg-[#222220]/20">
-            Path: assets/videos/Me.mp4
+          <div className="font-mono text-[9px] text-gray-700 bg-white/40 px-1 border border-white/20 select-none">
+            00:00 / {videoExists ? "01:30" : "00:00"}
           </div>
         </div>
-      )}
+
+      </div>
     </div>
   );
 }

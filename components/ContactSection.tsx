@@ -1,132 +1,167 @@
 "use client";
 
-import { motion } from "framer-motion";
-import SelfDrawingSVG, { drawPathVariants } from "./SelfDrawingSVG";
+import React, { useState } from "react";
 
 export default function ContactSection() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (name && email && message) {
+      setShowSuccess(true);
+    }
+  };
+
+  const handleCloseSuccess = () => {
+    setName("");
+    setEmail("");
+    setMessage("");
+    setShowSuccess(false);
+  };
+
   return (
-    <section
-      id="contact"
-      className="w-full min-h-screen flex flex-col justify-between p-6 md:p-12 bg-[#0A0A0A] border-t border-[#1C1C1C] relative z-10 select-none"
-    >
-      {/* Spacer */}
-      <div />
+    <div className="w-full h-full bg-[#c0c0c0] text-black font-sans text-xs flex flex-col p-4 overflow-auto relative">
+      
+      {/* Description */}
+      <div className="mb-4">
+        <h3 className="font-bold text-sm text-gray-800">Connection Wizard</h3>
+        <p className="text-gray-600 mt-1">Send a message to establish an active link with Rachana&apos;s terminal.</p>
+      </div>
 
-      <div className="max-w-5xl w-full mx-auto grid grid-cols-1 md:grid-cols-[55%_45%] gap-12 items-center my-auto">
-        {/* Left Side: Text and links */}
-        <div className="flex flex-col space-y-8">
-          {/* Main Title */}
-          <div className="flex flex-col font-display text-[10vw] md:text-[8vw] leading-[1.1] text-[#F5F5F0]">
-            <motion.span
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              {"Let's build"}
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="pl-6 md:pl-10 text-accent"
-            >
-              something.
-            </motion.span>
+      <div className="grid grid-cols-1 md:grid-cols-[55%_45%] gap-6 flex-1">
+        
+        {/* Left Side: Interactive Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-700">Your Name:</label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="bg-white border border-[#808080] win95-sunken px-2 py-1.5 focus:outline-none text-black font-mono"
+            />
           </div>
 
-          {/* Email / Phone */}
-          <div className="flex flex-col space-y-2 font-body text-lg md:text-xl text-[#F5F5F0]/85">
-            <a
-              href="mailto:adhikaryrachana00428@gmail.com"
-              className="hover:text-accent transition-colors duration-300 w-fit"
-            >
-              adhikaryrachana00428@gmail.com
-            </a>
-            <a
-              href="tel:+916295248578"
-              className="hover:text-accent transition-colors duration-300 w-fit"
-            >
-              +91 6295248578
-            </a>
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-700">Your Email:</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="bg-white border border-[#808080] win95-sunken px-2 py-1.5 focus:outline-none text-black font-mono"
+            />
           </div>
 
-          {/* Social Icons (GitHub, LinkedIn) */}
-          <div className="flex items-center space-x-6 pt-2">
-            {/* GitHub */}
-            <a
-              href="https://github.com/rachanaadhikary"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#F5F5F0] hover:text-accent transition-colors duration-300"
-              aria-label="GitHub Profile"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                className="w-7 h-7 fill-current"
+          <div className="flex-1 flex flex-col space-y-1 min-h-[120px]">
+            <label className="font-bold text-gray-700">Message:</label>
+            <textarea
+              required
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="flex-1 bg-white border border-[#808080] win95-sunken p-2.5 focus:outline-none text-black font-mono resize-none text-[11px]"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="win95-button w-full sm:w-28 py-1.5 font-bold cursor-pointer shrink-0 self-start"
+          >
+            Send Message
+          </button>
+        </form>
+
+        {/* Right Side: Quick Links & Info */}
+        <div className="flex flex-col justify-between p-4 border-2 border-white border-b-[#808080] border-r-[#808080] bg-[#c0c0c0] shadow-[inset_1px_1px_0_#808080]">
+          <div className="space-y-4">
+            <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-700">Terminal Address</h4>
+            
+            <div className="space-y-2 font-mono text-[11px]">
+              <div>
+                <span className="font-sans font-bold text-gray-500">Email: </span>
+                <a href="mailto:adhikaryrachana00428@gmail.com" className="text-blue-900 underline hover:text-blue-700">
+                  adhikaryrachana00428@gmail.com
+                </a>
+              </div>
+              <div>
+                <span className="font-sans font-bold text-gray-500">Phone: </span>
+                <a href="tel:+916295248578" className="text-blue-900 underline hover:text-blue-700">
+                  +91 6295248578
+                </a>
+              </div>
+            </div>
+
+            <div className="border-t border-[#808080] my-2" />
+
+            <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-700">Remote Links</h4>
+            <div className="flex space-x-2">
+              <a
+                href="https://github.com/rachanaadhikary"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="win95-button px-3 py-1 font-bold flex items-center justify-center space-x-1 cursor-pointer"
               >
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-              </svg>
-            </a>
-            {/* LinkedIn */}
-            <a
-              href="https://linkedin.com/in/rachanaadhikary"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#F5F5F0] hover:text-accent transition-colors duration-300"
-              aria-label="LinkedIn Profile"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                className="w-7 h-7 fill-current"
+                <span>GitHub</span>
+              </a>
+              <a
+                href="https://linkedin.com/in/rachanaadhikary"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="win95-button px-3 py-1 font-bold flex items-center justify-center space-x-1 cursor-pointer"
               >
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-              </svg>
-            </a>
+                <span>LinkedIn</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="text-[10px] text-gray-500 font-mono mt-6">
+            Rachana Adhikary<br />
+            2026 · Bengaluru, India
           </div>
         </div>
 
-        {/* Right Side: Closing Hand Sketch */}
-        <div className="w-full max-w-[280px] md:max-w-sm mx-auto aspect-square flex items-center justify-center">
-          <SelfDrawingSVG className="w-full h-full" delay={0.3}>
-            <svg
-              viewBox="0 0 200 200"
-              className="w-full h-full stroke-current fill-none text-[#F5F5F0]"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {/* Hand holding a pen drawing */}
-              {/* Hand contour */}
-              <motion.path
-                d="M 40 140 C 45 130, 60 110, 80 110 C 95 110, 100 120, 105 130 C 110 140, 130 150, 150 145 C 160 140, 170 120, 165 100"
-                custom={3.2}
-                variants={drawPathVariants}
-              />
-              {/* Fingers */}
-              <motion.path
-                d="M 80 110 C 78 95, 90 85, 105 90 C 115 95, 110 110, 105 120 M 98 90 C 98 75, 110 70, 120 80 C 128 90, 120 105, 112 110"
-                custom={3.5}
-                variants={drawPathVariants}
-              />
-              {/* Pen */}
-              <motion.path
-                d="M 65 150 L 140 50 M 65 150 L 60 155 L 70 152 L 65 150"
-                custom={2.8}
-                variants={drawPathVariants}
-              />
-            </svg>
-          </SelfDrawingSVG>
-        </div>
       </div>
 
-      {/* Footer Signature */}
-      <div className="w-full text-center pt-8 border-t border-[#1C1C1C]/40">
-        <span className="font-mono text-[10px] md:text-xs tracking-widest text-[#F5F5F0]/40">
-          Rachana Adhikary · 2026 · Bengaluru, India
-        </span>
-      </div>
-    </section>
+      {/* Success Dialog Modal popup */}
+      {showSuccess && (
+        <div className="absolute inset-0 bg-black/35 z-50 flex items-center justify-center p-4">
+          <div className="w-64 bg-[#c0c0c0] win95-raised p-1 flex flex-col">
+            {/* Modal Title bar */}
+            <div className="h-5 bg-gradient-to-r from-[#000080] to-[#1084d0] text-white flex items-center justify-between px-1.5 font-bold text-[11px]">
+              <span>Information</span>
+              <button 
+                onClick={handleCloseSuccess}
+                className="w-3.5 h-3.5 bg-[#c0c0c0] win95-raised text-black font-sans font-bold text-[9px] flex items-center justify-center active:shadow-[inset_1px_1px_0_#000]"
+              >
+                ✕
+              </button>
+            </div>
+            
+            {/* Modal content */}
+            <div className="p-4 flex items-start space-x-3">
+              <span className="text-2xl select-none shrink-0">ℹ</span>
+              <div className="font-sans text-[11px] leading-snug">
+                Connection established!<br />Your message has been sent successfully.
+              </div>
+            </div>
+
+            {/* Modal Footer OK button */}
+            <div className="flex justify-center pb-2 select-none">
+              <button
+                onClick={handleCloseSuccess}
+                className="win95-button px-6 py-1 min-w-[60px] font-bold cursor-pointer"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
   );
 }

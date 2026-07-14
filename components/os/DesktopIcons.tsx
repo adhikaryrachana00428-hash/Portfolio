@@ -1,6 +1,8 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { useThemeOS } from "./ThemeController";
+import { playNavigationClick } from "./audio";
 import { User, Cpu, FolderOpen, GitBranch, Calendar, Mail, Video } from "lucide-react";
 
 interface IconItem {
@@ -18,7 +20,7 @@ const DESKTOP_SHORTCUTS: IconItem[] = [
     title: "About Me",
     label: "AboutMe.txt",
     icon: User,
-    color: "text-amber-200/90",
+    color: "text-blue-900",
     windowOptions: { width: 780, height: 580 },
   },
   {
@@ -26,7 +28,7 @@ const DESKTOP_SHORTCUTS: IconItem[] = [
     title: "My Skills",
     label: "Skills.config",
     icon: Cpu,
-    color: "text-emerald-200/90",
+    color: "text-teal-900",
     windowOptions: { width: 700, height: 500 },
   },
   {
@@ -34,7 +36,7 @@ const DESKTOP_SHORTCUTS: IconItem[] = [
     title: "Projects",
     label: "Projects",
     icon: FolderOpen,
-    color: "text-[#C8B89A]",
+    color: "text-amber-800",
     windowOptions: { width: 800, height: 580 },
   },
   {
@@ -42,7 +44,7 @@ const DESKTOP_SHORTCUTS: IconItem[] = [
     title: "Open Source",
     label: "Contributions",
     icon: GitBranch,
-    color: "text-blue-200/90",
+    color: "text-purple-900",
     windowOptions: { width: 750, height: 550 },
   },
   {
@@ -50,7 +52,7 @@ const DESKTOP_SHORTCUTS: IconItem[] = [
     title: "The Journey",
     label: "Journey.log",
     icon: Calendar,
-    color: "text-purple-200/90",
+    color: "text-slate-800",
     windowOptions: { width: 750, height: 520 },
   },
   {
@@ -58,7 +60,7 @@ const DESKTOP_SHORTCUTS: IconItem[] = [
     title: "Contact",
     label: "Contact.connect",
     icon: Mail,
-    color: "text-rose-200/90",
+    color: "text-rose-900",
     windowOptions: { width: 700, height: 550 },
   },
   {
@@ -66,33 +68,72 @@ const DESKTOP_SHORTCUTS: IconItem[] = [
     title: "Welcome",
     label: "Me.mp4",
     icon: Video,
-    color: "text-amber-100/90",
+    color: "text-emerald-900",
     windowOptions: { width: 750, height: 540 },
   },
 ];
 
 export default function DesktopIcons() {
   const { openWindow } = useThemeOS();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Clear selection when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setSelectedId(null);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
+
+  const handleIconClick = (shortcut: IconItem) => {
+    playNavigationClick();
+    if (selectedId === shortcut.id) {
+      // Double click (or second click) opens the window
+      openWindow(shortcut.id, shortcut.title, shortcut.windowOptions);
+      setSelectedId(null);
+    } else {
+      // First click selects
+      setSelectedId(shortcut.id);
+    }
+  };
 
   return (
-    <div className="absolute left-6 md:left-10 top-20 bottom-16 w-32 z-10 flex flex-col space-y-6 select-none pointer-events-auto">
+    <div 
+      ref={containerRef}
+      className="absolute left-6 md:left-10 top-20 bottom-16 w-28 z-10 flex flex-col space-y-4 select-none pointer-events-auto items-center"
+    >
       {DESKTOP_SHORTCUTS.map((shortcut) => {
         const IconComponent = shortcut.icon;
+        const isSelected = selectedId === shortcut.id;
+        
         return (
           <button
             key={shortcut.id}
-            onClick={() => openWindow(shortcut.id, shortcut.title, shortcut.windowOptions)}
-            className="flex flex-col items-center justify-center p-2 rounded-xl border border-transparent hover:border-[#C8B89A]/15 hover:bg-[#222220]/30 transition-all duration-300 group cursor-pointer w-24 outline-none"
+            onClick={() => handleIconClick(shortcut)}
+            className="flex flex-col items-center justify-center p-1 rounded-none border border-transparent transition-all duration-75 group cursor-pointer w-24 outline-none relative"
           >
-            {/* Folder / File Icon */}
-            <div className={`w-12 h-12 flex items-center justify-center rounded-lg ${shortcut.color} relative mb-2 group-hover:scale-105 transition-transform duration-300`}>
-              <IconComponent className="w-8 h-8 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" />
-              {/* Retro decorative highlight line */}
-              <div className="absolute inset-0 border border-transparent group-hover:border-[#C8B89A]/20 rounded-lg pointer-events-none" />
+            {/* Retro 3D box or simple icon wrapper */}
+            <div className={`w-12 h-12 flex items-center justify-center rounded-none relative mb-1`}>
+              {/* Highlight background when selected */}
+              {isSelected && (
+                <div className="absolute inset-0 bg-[#000080]/15 border border-dotted border-[#000080] pointer-events-none" />
+              )}
+              
+              <IconComponent className={`w-8 h-8 ${shortcut.color} filter drop-shadow-[1px_1px_0px_rgba(255,255,255,0.7)]`} />
             </div>
 
-            {/* Label */}
-            <span className="font-mono text-[10px] md:text-xs text-[#F5F5F0]/90 text-center tracking-wide leading-tight group-hover:text-accent select-none bg-[#0A0A09]/20 px-1 rounded-sm">
+            {/* Retro Windows Label style */}
+            <span 
+              className={`font-mono text-[10px] md:text-xs text-center tracking-wide leading-tight px-1 py-0.5 border ${
+                isSelected 
+                  ? "bg-[#000080] text-white border-dotted border-white/60" 
+                  : "bg-transparent text-black border-transparent"
+              }`}
+            >
               {shortcut.label}
             </span>
           </button>

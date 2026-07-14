@@ -1,18 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useThemeOS } from "./ThemeController";
+import { useEffect, useState, useRef } from "react";
+import { useThemeOS, WindowInstance } from "./ThemeController";
+import { playNavigationClick } from "./audio";
 import Wallpaper from "./Wallpaper";
 import DesktopIcons from "./DesktopIcons";
 import WindowManager from "./WindowManager";
 import PullStringSwitch from "./PullStringSwitch";
 import FlashlightOverlay from "./FlashlightOverlay";
 import { motion, AnimatePresence } from "framer-motion";
-import { Monitor, Clock } from "lucide-react";
+import { 
+  Monitor, Clock, User, Cpu, FolderOpen, 
+  GitBranch, Calendar, Mail, Video, Power, 
+  Sun, Moon, Volume2 
+} from "lucide-react";
 
 export default function Desktop() {
-  const { themeMode, lightOn, activeWindows, focusWindow, openWindow } = useThemeOS();
+  const { 
+    themeMode, lightOn, activeWindows, focusWindow, openWindow, setBootState, setThemeMode, setLightOn 
+  } = useThemeOS();
+  
   const [time, setTime] = useState("");
+  const [startMenuOpen, setStartMenuOpen] = useState(false);
+  const startMenuRef = useRef<HTMLDivElement>(null);
+  const startButtonRef = useRef<HTMLButtonElement>(null);
 
   // Update clock in Asia/Kolkata timezone
   useEffect(() => {
@@ -22,8 +33,7 @@ export default function Desktop() {
         timeZone: "Asia/Kolkata",
         hour: "2-digit",
         minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
+        hour12: true,
       };
       setTime(new Intl.DateTimeFormat("en-IN", options).format(now));
     };
@@ -33,67 +43,81 @@ export default function Desktop() {
     return () => clearInterval(timer);
   }, []);
 
+  // Global click handler to play Windows click sound on all buttons and links
+  useEffect(() => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      let target = e.target as HTMLElement | null;
+      let isClickable = false;
+      while (target) {
+        if (
+          target.tagName === "BUTTON" ||
+          target.tagName === "A" ||
+          target.classList.contains("cursor-pointer") ||
+          target.getAttribute("role") === "button"
+        ) {
+          isClickable = true;
+          break;
+        }
+        target = target.parentElement;
+      }
+      if (isClickable) {
+        playNavigationClick();
+      }
+    };
+
+    document.addEventListener("click", handleGlobalClick);
+    return () => document.removeEventListener("click", handleGlobalClick);
+  }, []);
+
+  // Close Start Menu when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        startMenuOpen &&
+        startMenuRef.current &&
+        !startMenuRef.current.contains(e.target as Node) &&
+        startButtonRef.current &&
+        !startButtonRef.current.contains(e.target as Node)
+      ) {
+        setStartMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [startMenuOpen]);
+
+  const handleStartMenuItemClick = (id: string, title: string, options?: Partial<WindowInstance>) => {
+    openWindow(id, title, options);
+    setStartMenuOpen(false);
+  };
+
+  const handleShutDown = () => {
+    setBootState("selection");
+    setStartMenuOpen(false);
+  };
+
+  const handleToggleTheme = () => {
+    const nextMode = themeMode === "light" ? "dark" : "light";
+    setThemeMode(nextMode);
+    setLightOn(nextMode === "light");
+    setStartMenuOpen(false);
+  };
+
   return (
-    <div className="relative w-full h-screen overflow-hidden font-body text-[#F5F5F0]">
-      {/* 1. Desktop Wallpaper (with Parallax & Particles) */}
+    <div className="relative w-full h-screen overflow-hidden text-black select-none font-mono">
+      {/* 1. Desktop Wallpaper (Beige background + Hedgehog + Resume Link) */}
       <Wallpaper />
 
-      {/* 2. Top Taskbar / Status Bar */}
-      <header className="fixed top-0 left-0 right-0 h-12 bg-[#161614]/85 border-b border-[#2D2D2A]/80 backdrop-blur-md z-30 flex items-center justify-between px-6 select-none font-mono text-xs text-[#F5F5F0]/90">
-        <div className="flex items-center space-x-6">
-          {/* Start Menu Brand */}
-          <button 
-            onClick={() => openWindow("about", "About Me")}
-            className="flex items-center space-x-2 text-[#C8B89A] hover:text-[#F5F5F0] transition-colors cursor-pointer"
-          >
-            <Monitor className="w-4 h-4" />
-            <span className="font-display text-lg italic tracking-wider">rachanaOS</span>
-          </button>
-
-          {/* Active Tasks / Opened Windows in Taskbar */}
-          <div className="hidden sm:flex items-center space-x-2 border-l border-[#2D2D2A] pl-6">
-            {activeWindows.filter(w => w.isOpen).map((win) => (
-              <button
-                key={win.id}
-                onClick={() => focusWindow(win.id)}
-                className={`px-3 py-1 rounded border transition-all duration-300 cursor-pointer ${
-                  win.isMinimized
-                    ? "bg-transparent border-[#2D2D2A] text-[#F5F5F0]/40"
-                    : "bg-[#222220] border-[#C8B89A]/30 text-[#C8B89A] font-medium shadow-inner"
-                }`}
-              >
-                {win.title}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Side Info */}
-        <div className="flex items-center space-x-6 text-[#F5F5F0]/70">
-          {/* Environment Indicator */}
-          <div className="hidden md:flex items-center space-x-1.5 border border-[#2D2D2A] px-2.5 py-1 rounded bg-[#0A0A09]/20 text-[10px] uppercase tracking-wider">
-            <span className={`w-1.5 h-1.5 rounded-full ${lightOn ? "bg-amber-400 animate-pulse" : "bg-purple-500"}`} />
-            <span>{themeMode} mode</span>
-          </div>
-          
-          {/* Digital Clock */}
-          <div className="flex items-center space-x-2">
-            <Clock className="w-3.5 h-3.5 text-[#C8B89A]" />
-            <span className="font-mono tabular-nums tracking-wider">{time || "00:00:00"}</span>
-          </div>
-        </div>
-      </header>
-
-      {/* 3. Main Desktop Area containing shortcuts */}
+      {/* 2. Main Desktop Area containing shortcuts */}
       <DesktopIcons />
 
-      {/* 4. Window Manager renders all open draggable windows */}
+      {/* 3. Window Manager renders all open draggable windows */}
       <WindowManager />
 
-      {/* 5. Hanging Pull-String Light Switch */}
+      {/* 4. Hanging Pull-String Light Switch (Left-Aligned) */}
       <PullStringSwitch />
 
-      {/* 6. Dark Mode Interactive Flashlight Mask */}
+      {/* 5. Dark Mode Interactive Flashlight Mask */}
       <AnimatePresence>
         {!lightOn && (
           <motion.div
@@ -108,7 +132,7 @@ export default function Desktop() {
         )}
       </AnimatePresence>
 
-      {/* 7. Dark Mode Playful Warning & Hint Captions */}
+      {/* 6. Dark Mode Playful Warning & Hint Captions */}
       <AnimatePresence>
         {!lightOn && (
           <motion.div
@@ -116,30 +140,204 @@ export default function Desktop() {
             animate={{ opacity: 0.7, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ delay: 0.5, duration: 1 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 text-center font-mono flex flex-col items-center space-y-1.5 pointer-events-none select-none px-6"
+            className="fixed bottom-16 left-1/2 -translate-x-1/2 z-40 text-center font-mono flex flex-col items-center space-y-1 pointer-events-none select-none px-6"
           >
-            <span className="text-xs text-[#F5F5F0]/80 tracking-wide">
+            <span className="text-[11px] text-gray-800 tracking-wide font-bold">
               “Please don’t curse me… you chose this.”
             </span>
-            <span className="text-[10px] text-[#C8B89A] tracking-wider uppercase animate-pulse">
-              “Visibility is quite less, I agree. Try pulling the strings!”
+            <span className="text-[10px] text-blue-900 tracking-wider uppercase animate-pulse font-bold">
+              “Try pulling the string on the top-left!”
             </span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* 8. Light Mode Warm Ambient Room Light Transition Layer */}
+      {/* 7. Light Mode Warm Ambient Room Light Transition Layer */}
       <AnimatePresence>
         {lightOn && (
           <motion.div
-            initial={{ opacity: 0.8 }}
+            initial={{ opacity: 0.5 }}
             animate={{ opacity: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-            className="fixed inset-0 bg-[#FFEFC7]/20 pointer-events-none z-[95] mix-blend-color-dodge"
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="fixed inset-0 bg-[#FFEFC7]/10 pointer-events-none z-[95] mix-blend-color-dodge"
           />
         )}
       </AnimatePresence>
+
+      {/* 8. Classic Windows 95 Start Menu */}
+      <AnimatePresence>
+        {startMenuOpen && (
+          <motion.div
+            ref={startMenuRef}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 15 }}
+            transition={{ duration: 0.15 }}
+            className="fixed left-2 bottom-11 w-64 bg-[#c0c0c0] z-[110] win95-raised p-1 flex select-none text-xs"
+          >
+            {/* Vertical Sidebar */}
+            <div className="w-8 bg-[#000080] flex items-end justify-center py-2 text-white font-bold select-none text-sm tracking-wider">
+              <span 
+                className="transform -rotate-90 origin-center whitespace-nowrap mb-6 block"
+                style={{ writingMode: "vertical-rl" }}
+              >
+                Rachana 95
+              </span>
+            </div>
+
+            {/* Menu Items */}
+            <div className="flex-1 flex flex-col p-1 space-y-1">
+              <button
+                onClick={() => handleStartMenuItemClick("about", "About Me", { width: 780, height: 580 })}
+                className="w-full text-left flex items-center space-x-3 px-3 py-2 hover:bg-[#000080] hover:text-white rounded-none cursor-pointer"
+              >
+                <User className="w-4 h-4 text-blue-900 group-hover:text-white" />
+                <span className="font-bold">AboutMe.txt</span>
+              </button>
+              
+              <button
+                onClick={() => handleStartMenuItemClick("skills", "My Skills", { width: 700, height: 500 })}
+                className="w-full text-left flex items-center space-x-3 px-3 py-2 hover:bg-[#000080] hover:text-white rounded-none cursor-pointer"
+              >
+                <Cpu className="w-4 h-4 text-teal-900" />
+                <span className="font-bold">Skills.config</span>
+              </button>
+
+              <button
+                onClick={() => handleStartMenuItemClick("projects", "Projects", { width: 800, height: 580 })}
+                className="w-full text-left flex items-center space-x-3 px-3 py-2 hover:bg-[#000080] hover:text-white rounded-none cursor-pointer"
+              >
+                <FolderOpen className="w-4 h-4 text-amber-800" />
+                <span className="font-bold">Projects Folder</span>
+              </button>
+
+              <button
+                onClick={() => handleStartMenuItemClick("open-source", "Open Source", { width: 750, height: 550 })}
+                className="w-full text-left flex items-center space-x-3 px-3 py-2 hover:bg-[#000080] hover:text-white rounded-none cursor-pointer"
+              >
+                <GitBranch className="w-4 h-4 text-purple-900" />
+                <span className="font-bold">Contributions.log</span>
+              </button>
+
+              <button
+                onClick={() => handleStartMenuItemClick("timeline", "The Journey", { width: 750, height: 520 })}
+                className="w-full text-left flex items-center space-x-3 px-3 py-2 hover:bg-[#000080] hover:text-white rounded-none cursor-pointer"
+              >
+                <Calendar className="w-4 h-4 text-slate-800" />
+                <span className="font-bold">Journey.log</span>
+              </button>
+
+              <button
+                onClick={() => handleStartMenuItemClick("contact", "Contact", { width: 700, height: 550 })}
+                className="w-full text-left flex items-center space-x-3 px-3 py-2 hover:bg-[#000080] hover:text-white rounded-none cursor-pointer"
+              >
+                <Mail className="w-4 h-4 text-rose-900" />
+                <span className="font-bold">Contact.connect</span>
+              </button>
+
+              <button
+                onClick={() => handleStartMenuItemClick("me-video", "Welcome", { width: 750, height: 540 })}
+                className="w-full text-left flex items-center space-x-3 px-3 py-2 hover:bg-[#000080] hover:text-white rounded-none cursor-pointer"
+              >
+                <Video className="w-4 h-4 text-emerald-900" />
+                <span className="font-bold">Me.mp4</span>
+              </button>
+
+              <div className="border-t border-[#808080] my-1" />
+
+              <button
+                onClick={handleToggleTheme}
+                className="w-full text-left flex items-center space-x-3 px-3 py-2 hover:bg-[#000080] hover:text-white rounded-none cursor-pointer"
+              >
+                {themeMode === "light" ? (
+                  <>
+                    <Moon className="w-4 h-4 text-blue-900" />
+                    <span className="font-bold">Switch to Dark Mode</span>
+                  </>
+                ) : (
+                  <>
+                    <Sun className="w-4 h-4 text-amber-500" />
+                    <span className="font-bold">Switch to Light Mode</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={handleShutDown}
+                className="w-full text-left flex items-center space-x-3 px-3 py-2 hover:bg-[#000080] hover:text-white rounded-none cursor-pointer"
+              >
+                <Power className="w-4 h-4 text-red-700" />
+                <span className="font-bold">Shut Down...</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 9. Bottom Classic Taskbar */}
+      <footer className="fixed bottom-0 left-0 right-0 h-10 bg-[#c0c0c0] border-t border-[#dfdfdf] z-[120] flex items-center justify-between px-2 select-none text-xs shadow-[0_-2px_0px_#808080]">
+        
+        {/* Left Side: Start Button & Active Tasks */}
+        <div className="flex items-center space-x-2 flex-1 min-w-0 h-full py-0.5">
+          {/* Start Button */}
+          <button
+            ref={startButtonRef}
+            onClick={() => setStartMenuOpen(!startMenuOpen)}
+            className={`h-full px-3 flex items-center space-x-1.5 font-bold text-sm cursor-pointer select-none focus:outline-none ${
+              startMenuOpen 
+                ? "win95-sunken bg-[#dfdfdf] p-[7px_5px_5px_9px]" 
+                : "win95-raised"
+            }`}
+          >
+            <Monitor className="w-4 h-4 text-black" />
+            <span>Start</span>
+          </button>
+
+          {/* Active Tasks list */}
+          <div className="flex items-center space-x-1.5 h-full overflow-hidden flex-1 pl-2">
+            {activeWindows.filter(w => w.isOpen).map((win) => {
+              const isFocused = !win.isMinimized && win.zIndex === Math.max(...activeWindows.map(w => w.zIndex));
+              return (
+                <button
+                  key={win.id}
+                  onClick={() => focusWindow(win.id)}
+                  className={`h-full max-w-[120px] sm:max-w-[150px] flex-1 px-3 text-left flex items-center space-x-1.5 truncate rounded-none font-bold text-[11px] cursor-pointer select-none focus:outline-none transition-all duration-75 ${
+                    isFocused
+                      ? "win95-sunken bg-[#dfdfdf] p-[5px_3px_3px_5px]"
+                      : "win95-raised"
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-blue-800/40 shrink-0" />
+                  <span className="truncate">{win.title}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right Side: Status Tray */}
+        <div className="flex items-center space-x-3 px-2 h-8 win95-sunken bg-[#c0c0c0] shrink-0 text-black">
+          {/* Audio Tray icon */}
+          <Volume2 className="w-3.5 h-3.5 text-[#000] opacity-80" />
+          
+          {/* Theme mode tray indicator */}
+          <button 
+            onClick={handleToggleTheme}
+            className="flex items-center space-x-1 hover:bg-black/5 px-1 rounded-sm cursor-pointer"
+            title={`Switch to ${themeMode === "light" ? "dark" : "light"} mode`}
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${lightOn ? "bg-green-600 animate-pulse" : "bg-purple-600"}`} />
+            <span className="text-[10px] uppercase font-bold tracking-wider">{themeMode}</span>
+          </button>
+
+          {/* Digital Clock */}
+          <div className="flex items-center space-x-1 border-l border-[#808080] pl-2 font-mono tabular-nums font-bold text-[11px]">
+            <Clock className="w-3 h-3 text-[#000] opacity-80" />
+            <span>{time || "12:00 AM"}</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

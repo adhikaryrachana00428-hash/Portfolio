@@ -1,150 +1,120 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface BootScreenProps {
   onComplete: () => void;
 }
 
 export default function BootScreen({ onComplete }: BootScreenProps) {
+  const [phase, setPhase] = useState<"bios" | "win95" | "done">("bios");
+  const [biosLines, setBiosLines] = useState<string[]>([]);
   const [progress, setProgress] = useState(0);
-  const [phase, setPhase] = useState<"logo-fade-in" | "loading" | "fade-out">("logo-fade-in");
-  const [logoError, setLogoError] = useState(false);
 
+  // Phase 1: BIOS scrolling text
   useEffect(() => {
-    // Phase 1: Logo fades in (0 to 1.5s)
-    const logoTimer = setTimeout(() => {
-      setPhase("loading");
-    }, 1200);
+    if (phase !== "bios") return;
 
-    // Phase 2: Progress bar fills (1.2s to 4.2s)
-    let progressInterval: NodeJS.Timeout;
-    const progressStartTimer = setTimeout(() => {
-      progressInterval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(progressInterval);
-            return 100;
-          }
-          // Increments randomly for realistic OS boot look
-          const increment = Math.floor(Math.random() * 8) + 4;
-          return Math.min(100, prev + increment);
-        });
-      }, 150);
-    }, 1200);
+    const fullLines = [
+      "AMIBIOS (C) 1995 American Megatrends, Inc.",
+      "BIOS Date: 07/14/95 14:32:09 Ver: 01.00.03",
+      "CPU: Intel Pentium(R) at 90MHz",
+      "Memory Test: 16384KB OK",
+      "Detecting IDE Primary Master ... WDC AC31600H",
+      "Detecting IDE Secondary Master ... None",
+      "Detecting Keyboard ... Detected",
+      "Detecting Mouse ... Detected",
+      "Starting MS-DOS...",
+      "C:\\> load_portfolio.exe",
+    ];
 
-    return () => {
-      clearTimeout(logoTimer);
-      clearTimeout(progressStartTimer);
-      if (progressInterval) clearInterval(progressInterval);
-    };
-  }, []);
+    let currentLine = 0;
+    const interval = setInterval(() => {
+      if (currentLine < fullLines.length) {
+        setBiosLines((prev) => [...prev, fullLines[currentLine]]);
+        currentLine++;
+      } else {
+        clearInterval(interval);
+        setTimeout(() => setPhase("win95"), 800);
+      }
+    }, 150);
 
-  // When progress reaches 100%, hold briefly then fade out
+    return () => clearInterval(interval);
+  }, [phase]);
+
+  // Phase 2: Windows 95 loading bar
   useEffect(() => {
-    if (progress === 100) {
-      const fadeTimer = setTimeout(() => {
-        setPhase("fade-out");
-      }, 600);
+    if (phase !== "win95") return;
 
-      const completeTimer = setTimeout(() => {
-        onComplete();
-      }, 1400); // Allow time for exit animation
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          setTimeout(() => {
+            setPhase("done");
+            onComplete();
+          }, 600);
+          return 100;
+        }
+        // Small increments to simulate retro disk load speeds
+        const inc = Math.floor(Math.random() * 12) + 6;
+        return Math.min(100, prev + inc);
+      });
+    }, 200);
 
-      return () => {
-        clearTimeout(fadeTimer);
-        clearTimeout(completeTimer);
-      };
-    }
-  }, [progress, onComplete]);
+    return () => clearInterval(progressInterval);
+  }, [phase, onComplete]);
+
+  if (phase === "bios") {
+    return (
+      <div className="fixed inset-0 bg-black text-gray-300 font-mono text-[10px] sm:text-xs p-6 flex flex-col justify-start select-none z-50 uppercase leading-relaxed">
+        <div className="flex-1 space-y-1">
+          {biosLines.map((line, idx) => (
+            <div key={idx}>{line}</div>
+          ))}
+        </div>
+        <div className="text-gray-500 text-[9px] mt-6 border-t border-gray-800 pt-2 text-right">
+          Press DEL to enter Setup
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="fixed inset-0 bg-[#0A0A0A] z-50 flex flex-col items-center justify-center select-none font-mono text-[#F5F5F0]">
-      <AnimatePresence mode="wait">
-        {phase !== "fade-out" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.8 } }}
-            className="flex flex-col items-center max-w-sm w-full px-6"
-          >
-            {/* Logo Container */}
-            <div className="h-32 flex items-center justify-center mb-8 relative">
-              {!logoError ? (
-                // Try loading from assets
-                <motion.img
-                  src="/assets/images/logo.png"
-                  alt="Logo"
-                  className="max-h-24 object-contain"
-                  onError={() => setLogoError(true)}
-                  initial={{ scale: 0.95, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 1.2, ease: "easeOut" }}
-                />
-              ) : (
-                // Cursive Hand-written Logo Fallback
-                <div className="relative w-64 flex flex-col items-center justify-center">
-                  <svg
-                    viewBox="0 0 300 120"
-                    className="w-full h-auto stroke-current fill-none text-[#C8B89A]"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <motion.path
-                      d="M 35 70 C 35 25, 65 15, 50 80 C 65 60, 75 45, 80 75 C 90 50, 105 50, 100 80 Q 110 30, 115 80 C 130 55, 140 55, 135 80 C 142 55, 155 55, 150 80 Q 155 55, 168 55 C 180 55, 175 80, 185 55"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{
-                        duration: 1.5,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  </svg>
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.7 }}
-                    transition={{ delay: 0.8, duration: 0.5 }}
-                    className="font-display text-2xl tracking-widest text-[#C8B89A] italic -mt-2"
-                  >
-                    Rachana
-                  </motion.p>
-                </div>
-              )}
-            </div>
+    <div className="fixed inset-0 bg-[#008080] flex flex-col items-center justify-center select-none z-50 text-black">
+      {/* Cloud-like retro background drawing container */}
+      <div className="max-w-md w-full p-8 flex flex-col items-center text-center space-y-10 relative">
+        {/* Startup Logo Header */}
+        <div className="flex flex-col items-center">
+          <div className="text-5xl font-extrabold italic tracking-wider text-white drop-shadow-[2px_2px_0px_#000] select-none font-sans">
+            Rachana<span className="text-blue-900 text-6xl">95</span>
+          </div>
+          <div className="text-xs uppercase tracking-[0.3em] font-sans font-bold text-gray-200 mt-2 select-none">
+            Microsoft Windows 95 Compatible
+          </div>
+        </div>
 
-            {/* Booting Text & Loading Bar */}
-            {phase === "loading" && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="w-full flex flex-col items-center"
-              >
-                <div className="text-xs uppercase tracking-[0.2em] text-[#C8B89A]/80 mb-3 animate-pulse">
-                  {"Booting Rachana's portfolio..."}
-                </div>
-
-                {/* Progress Bar Container */}
-                <div className="w-full h-[6px] bg-[#1C1C1C] rounded-full overflow-hidden border border-[#2A2A2A]/40 relative">
-                  {/* Premium segment styling */}
-                  <motion.div
-                    className="h-full bg-gradient-to-r from-[#C8B89A]/60 via-[#C8B89A] to-[#C8B89A]/60 rounded-full"
-                    style={{ width: `${progress}%` }}
-                    layout
-                  />
-                </div>
-
-                {/* Progress Percentage */}
-                <div className="text-[10px] text-[#F5F5F0]/40 mt-2 font-mono">
-                  {progress}%
-                </div>
-              </motion.div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Loading Segmented Bar */}
+        <div className="w-64 flex flex-col items-center select-none">
+          <div className="w-full text-[10px] text-gray-200 mb-2 uppercase font-mono tracking-widest text-center animate-pulse">
+            INITIALIZING WORKSPACE
+          </div>
+          
+          {/* Classic Win95 Progress Bar container */}
+          <div className="w-full h-4 bg-[#c0c0c0] win95-sunken p-[2px] relative overflow-hidden">
+            {/* Repeating block segments */}
+            <div 
+              className="h-full bg-[#000080]"
+              style={{ 
+                width: `${progress}%`,
+                backgroundImage: "repeating-linear-gradient(90deg, #000080, #000080 8px, #c0c0c0 8px, #c0c0c0 11px)",
+                transition: "width 0.15s ease-out"
+              }}
+            />
+          </div>
+          <div className="text-[9px] font-mono text-gray-300 mt-2">{progress}%</div>
+        </div>
+      </div>
     </div>
   );
 }

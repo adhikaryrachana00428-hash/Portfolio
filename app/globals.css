@@ -3,31 +3,88 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    background-color: #0A0A0A;
-    color: #F5F5F0;
+  html, body {
+    background-color: #dfdcd6; /* Dark beige color like PostHog */
+    color: #000000;
+    /* Custom SVG Cursor: Classic slanted white arrow pointer with black outline */
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M0,0 L0,17 L4.5,13 L8.5,21.5 L11.5,20 L7.5,11.5 L12.5,11.5 Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='miter'/%3E%3C/svg%3E") 0 0, auto;
+    font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, -apple-system, sans-serif;
+  }
+  
+  a, button, select, input, [role="button"], .cursor-pointer {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M0,0 L0,17 L4.5,13 L8.5,21.5 L11.5,20 L7.5,11.5 L12.5,11.5 Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='miter'/%3E%3C/svg%3E") 0 0, pointer;
   }
 }
 
-/* Custom Scrollbar to match the zine theme */
+/* Windows 95 Bevel Layout System */
+.win95-raised {
+  background-color: #c0c0c0;
+  box-shadow: inset 1px 1px 0px #ffffff,
+              inset -1px -1px 0px #0a0a0a,
+              inset 2px 2px 0px #dfdfdf,
+              inset -2px -2px 0px #808080;
+}
+
+.win95-sunken {
+  background-color: #ffffff;
+  box-shadow: inset 1px 1px 0px #808080,
+              inset -1px -1px 0px #ffffff,
+              inset 2px 2px 0px #0a0a0a,
+              inset -2px -2px 0px #dfdfdf;
+}
+
+.win95-button {
+  background-color: #c0c0c0;
+  box-shadow: inset 1px 1px 0px #ffffff,
+              inset -1px -1px 0px #0a0a0a,
+              inset 2px 2px 0px #dfdfdf,
+              inset -2px -2px 0px #808080;
+  border: 1px solid #c0c0c0;
+  outline: none;
+  font-weight: bold;
+}
+
+.win95-button:active {
+  box-shadow: inset 1px 1px 0px #0a0a0a,
+              inset -1px -1px 0px #ffffff,
+              inset 2px 2px 0px #808080,
+              inset -2px -2px 0px #dfdfdf;
+  padding-top: 5px !important;
+  padding-bottom: 3px !important;
+  padding-left: 9px !important;
+  padding-right: 7px !important;
+}
+
+/* Custom Scrollbar to match the classic Windows 95 look */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 16px;
+  height: 16px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: #c0c0c0;
+  /* Retro checkered track pattern */
+  background-image: linear-gradient(45deg, #e6e2da 25%, transparent 25%), 
+                    linear-gradient(-45deg, #e6e2da 25%, transparent 25%), 
+                    linear-gradient(45deg, transparent 75%, #e6e2da 75%), 
+                    linear-gradient(-45deg, transparent 75%, #e6e2da 75%);
+  background-size: 4px 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2A2A2A;
-  border-radius: 3px;
+  background: #c0c0c0;
+  box-shadow: inset 1px 1px 0px #ffffff,
+              inset -1px -1px 0px #0a0a0a,
+              inset 2px 2px 0px #dfdfdf,
+              inset -2px -2px 0px #808080;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #C8B89A;
+  background: #c0c0c0;
 }
 
 /* Ensure smooth custom behaviors */
 html {
   scroll-behavior: smooth;
 }
+
