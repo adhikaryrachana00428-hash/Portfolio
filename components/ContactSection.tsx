@@ -23,65 +23,65 @@ export default function ContactSection() {
   };
 
   return (
-    <div className="w-full h-full bg-[#c0c0c0] text-black font-sans text-xs flex flex-col p-4 overflow-auto relative">
+    <div className="w-full h-full bg-[#c0c0c0] text-black font-sans text-xs flex flex-col p-3 sm:p-4 overflow-auto relative">
       
       {/* Description */}
-      <div className="mb-4">
-        <h3 className="font-bold text-sm text-gray-800">Connection Wizard</h3>
-        <p className="text-gray-600 mt-1">Send a message to establish an active link with Rachana&apos;s terminal.</p>
+      <div className="mb-3 sm:mb-4 shrink-0">
+        <h3 className="font-bold text-xs sm:text-sm text-gray-800">Connection Wizard</h3>
+        <p className="text-gray-600 mt-0.5 sm:mt-1 text-[11px] sm:text-xs">Send a message to establish an active link with Rachana&apos;s terminal.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-[55%_45%] gap-6 flex-1">
+      <div className="grid grid-cols-1 md:grid-cols-[55%_45%] gap-4 sm:gap-6 flex-1">
         
         {/* Left Side: Interactive Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-3 sm:space-y-4">
           <div className="flex flex-col space-y-1">
-            <label className="font-bold text-gray-700">Your Name:</label>
+            <label className="font-bold text-gray-700 text-[11px] sm:text-xs">Your Name:</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-white border border-[#808080] win95-sunken px-2 py-1.5 focus:outline-none text-black font-mono"
+              className="bg-white border border-[#808080] win95-sunken px-2 py-1.5 focus:outline-none text-black font-mono text-base sm:text-xs"
             />
           </div>
 
           <div className="flex flex-col space-y-1">
-            <label className="font-bold text-gray-700">Your Email:</label>
+            <label className="font-bold text-gray-700 text-[11px] sm:text-xs">Your Email:</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-white border border-[#808080] win95-sunken px-2 py-1.5 focus:outline-none text-black font-mono"
+              className="bg-white border border-[#808080] win95-sunken px-2 py-1.5 focus:outline-none text-black font-mono text-base sm:text-xs"
             />
           </div>
 
-          <div className="flex-1 flex flex-col space-y-1 min-h-[120px]">
-            <label className="font-bold text-gray-700">Message:</label>
+          <div className="flex-1 flex flex-col space-y-1 min-h-[100px]">
+            <label className="font-bold text-gray-700 text-[11px] sm:text-xs">Message:</label>
             <textarea
               required
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="flex-1 bg-white border border-[#808080] win95-sunken p-2.5 focus:outline-none text-black font-mono resize-none text-[11px]"
+              className="flex-1 bg-white border border-[#808080] win95-sunken p-2.5 focus:outline-none text-black font-mono resize-none text-base sm:text-xs"
             />
           </div>
 
           <button
             type="submit"
-            className="win95-button w-full sm:w-28 py-1.5 font-bold cursor-pointer shrink-0 self-start"
+            className="win95-button w-full sm:w-28 py-1.5 font-bold cursor-pointer shrink-0 self-start touch-manipulation text-[11px] sm:text-xs"
           >
             Send Message
           </button>
         </form>
 
         {/* Right Side: Quick Links & Info */}
-        <div className="flex flex-col justify-between p-4 border-2 border-white border-b-[#808080] border-r-[#808080] bg-[#c0c0c0] shadow-[inset_1px_1px_0_#808080]">
-          <div className="space-y-4">
+        <div className="flex flex-col justify-between p-3 sm:p-4 border-2 border-white border-b-[#808080] border-r-[#808080] bg-[#c0c0c0] shadow-[inset_1px_1px_0_#808080]">
+          <div className="space-y-3 sm:space-y-4">
             <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-700">Terminal Address</h4>
             
-            <div className="space-y-2 font-mono text-[11px]">
-              <div>
+            <div className="space-y-2 font-mono text-[11px] sm:text-xs">
+              <div className="break-all">
                 <span className="font-sans font-bold text-gray-500">Email: </span>
                 <a href="mailto:adhikaryrachana00428@gmail.com" className="text-blue-900 underline hover:text-blue-700">
                   adhikaryrachana00428@gmail.com
@@ -103,7 +103,7 @@ export default function ContactSection() {
                 href="https://github.com/rachanaadhikary"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="win95-button px-3 py-1 font-bold flex items-center justify-center space-x-1 cursor-pointer"
+                className="win95-button px-3 py-1 font-bold flex items-center justify-center space-x-1 cursor-pointer touch-manipulation text-[11px] sm:text-xs"
               >
                 <span>GitHub</span>
               </a>
@@ -111,14 +111,14 @@ export default function ContactSection() {
                 href="https://linkedin.com/in/rachanaadhikary"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="win95-button px-3 py-1 font-bold flex items-center justify-center space-x-1 cursor-pointer"
+                className="win95-button px-3 py-1 font-bold flex items-center justify-center space-x-1 cursor-pointer touch-manipulation text-[11px] sm:text-xs"
               >
                 <span>LinkedIn</span>
               </a>
             </div>
           </div>
 
-          <div className="text-[10px] text-gray-500 font-mono mt-6">
+          <div className="text-[10px] text-gray-500 font-mono mt-4 sm:mt-6">
             Rachana Adhikary<br />
             2026 · Bengaluru, India
           </div>

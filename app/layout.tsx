@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Caveat, EB_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -20,13 +20,22 @@ const jetbrainsFont = JetBrains_Mono({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#008080",
+};
+
 export const metadata: Metadata = {
   title: "Rachana Adhikary | Portfolio",
-  description: "A zine-style scrollytelling personal portfolio for Rachana Adhikary — CS Engineering student passionate about AI safety, Rust, and open source.",
+  description: "A Windows 95 scrollytelling personal portfolio for Rachana Adhikary — CS Engineering student passionate about AI safety, Rust, and open source.",
   metadataBase: new URL("https://rachanaadhikary.dev"),
   openGraph: {
     title: "Rachana Adhikary | Portfolio",
-    description: "A zine-style scrollytelling personal portfolio for Rachana Adhikary.",
+    description: "A Windows 95 scrollytelling personal portfolio for Rachana Adhikary.",
     type: "website",
   },
 };

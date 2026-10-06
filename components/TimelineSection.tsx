@@ -16,19 +16,37 @@ const TIMELINE_EVENTS = [
 
 export default function TimelineSection() {
   return (
-    <div className="font-mono text-xs md:text-sm text-black whitespace-pre-wrap leading-relaxed select-text p-1">
-{`SYS_LOG: THE JOURNEY
-====================
-[INFO] Loading chronological event list...
+    <div className="font-mono text-[11px] sm:text-xs md:text-sm text-black leading-relaxed select-text p-1 min-w-full">
+      <div className="mb-2">
+        <div className="font-bold">SYS_LOG: THE JOURNEY</div>
+        <div>====================</div>
+        <div className="text-gray-600">[INFO] Loading chronological event list...</div>
+      </div>
 
-[TIMESTAMP]  | [EVENT DETAIL]
--------------+---------------------------------------------------
-${TIMELINE_EVENTS.map(event => `${event.date.padEnd(12, ' ')} | [OK] ${event.desc}`).join("\n")}
+      <div className="border-t border-b border-gray-400 py-1 my-2 flex text-[10px] sm:text-xs font-bold text-gray-700 select-none">
+        <span className="w-24 sm:w-28 shrink-0">[TIMESTAMP]</span>
+        <span className="shrink-0 mr-2">|</span>
+        <span className="flex-1">[EVENT DETAIL]</span>
+      </div>
 
-[INFO] Log end reached.
-----------------------------------------------------
-File: Journey.log  |  Log Level: INFO  |  Lines: 15
-`}
+      <div className="space-y-1.5 my-2">
+        {TIMELINE_EVENTS.map((event, idx) => (
+          <div key={idx} className="flex items-start text-[11px] sm:text-xs">
+            <span className="w-24 sm:w-28 shrink-0 text-blue-900 font-bold">{event.date}</span>
+            <span className="shrink-0 mr-2 text-gray-400">|</span>
+            <span className="flex-1 break-words">
+              <span className="text-emerald-700 font-bold">[OK] </span>
+              {event.desc}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 pt-2 border-t border-gray-400 text-gray-600 text-[10px] sm:text-xs">
+        <div>[INFO] Log end reached.</div>
+        <div className="text-gray-400 mt-1">----------------------------------------------------</div>
+        <div className="text-gray-500">File: Journey.log  |  Log Level: INFO  |  Lines: {TIMELINE_EVENTS.length + 6}</div>
+      </div>
     </div>
   );
 }

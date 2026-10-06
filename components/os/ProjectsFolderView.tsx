@@ -97,36 +97,36 @@ export default function ProjectsFolderView() {
     <div className="w-full h-full flex flex-col bg-[#c0c0c0] font-sans text-xs">
       
       {/* 1. Classic Windows Explorer Menu Bar */}
-      <div className="bg-[#c0c0c0] border-b border-[#808080] py-0.5 px-2 flex space-x-4 select-none shrink-0 font-medium">
-        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">File</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">Edit</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">View</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">Go</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">Favorites</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1.5 cursor-pointer">Help</span>
+      <div className="bg-[#c0c0c0] border-b border-[#808080] py-0.5 px-2 flex space-x-2 sm:space-x-4 select-none shrink-0 font-medium overflow-x-auto whitespace-nowrap text-[11px] sm:text-xs">
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">File</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">Edit</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">View</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">Go</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">Favorites</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">Help</span>
       </div>
 
       {/* 2. File Path bar */}
-      <div className="bg-[#c0c0c0] border-b border-[#808080] p-1 flex items-center space-x-2 shrink-0 select-none">
-        <span className="text-[#808080] pl-2">Address:</span>
-        <div className="flex-1 bg-white border border-[#808080] px-2 py-0.5 win95-sunken text-black truncate font-mono">
+      <div className="bg-[#c0c0c0] border-b border-[#808080] p-1 flex items-center space-x-2 shrink-0 select-none text-[11px] sm:text-xs">
+        <span className="text-[#808080] pl-1 sm:pl-2 shrink-0">Address:</span>
+        <div className="flex-1 bg-white border border-[#808080] px-2 py-0.5 win95-sunken text-black truncate font-mono text-[10px] sm:text-xs">
           C:\MyDocuments\Projects
         </div>
       </div>
 
       {/* 3. Main Folder Grid Contents */}
-      <div className="flex-1 bg-white overflow-auto p-6 win95-sunken m-1">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+      <div className="flex-1 bg-white overflow-auto p-3 sm:p-6 win95-sunken m-1">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6 justify-items-center">
           {PROJECTS_LIST.map((proj) => (
             <button
               key={proj.id}
               onClick={() => handleOpenProject(proj.id, proj.name)}
-              className="flex flex-col items-center p-2 border border-transparent hover:border-dotted hover:border-black/50 hover:bg-[#000080]/5 focus:bg-[#000080] focus:text-white group cursor-pointer w-24 outline-none"
+              className="flex flex-col items-center p-1.5 sm:p-2 border border-transparent hover:border-dotted hover:border-black/50 hover:bg-[#000080]/5 focus:bg-[#000080] focus:text-white group cursor-pointer w-24 outline-none touch-manipulation"
             >
-              <div className="mb-2">
+              <div className="mb-1.5 sm:mb-2 scale-90 sm:scale-100">
                 <RetroFolderIcon />
               </div>
-              <span className="font-sans text-[11px] text-center font-bold tracking-wide leading-tight group-focus:text-white">
+              <span className="font-sans text-[10px] sm:text-[11px] text-center font-bold tracking-wide leading-tight group-focus:text-white line-clamp-2">
                 {proj.name}
               </span>
             </button>
@@ -135,14 +135,14 @@ export default function ProjectsFolderView() {
       </div>
 
       {/* 4. Explorer Status Bar */}
-      <div className="h-5 bg-[#c0c0c0] border-t border-[#dfdfdf] flex items-center justify-between px-3 select-none text-[10px] shrink-0 font-medium font-sans">
-        <div className="flex items-center space-x-2 border-r border-[#808080] pr-6 flex-1">
+      <div className="h-5 bg-[#c0c0c0] border-t border-[#dfdfdf] flex items-center justify-between px-2 sm:px-3 select-none text-[9px] sm:text-[10px] shrink-0 font-medium font-sans">
+        <div className="flex items-center space-x-2 border-r border-[#808080] pr-3 sm:pr-6 flex-1 truncate">
           <span>{PROJECTS_LIST.length} object(s)</span>
         </div>
-        <div className="flex items-center space-x-2 border-r border-[#808080] px-6 shrink-0">
+        <div className="hidden sm:flex items-center space-x-2 border-r border-[#808080] px-4 shrink-0">
           <span>My Computer</span>
         </div>
-        <div className="pl-6 shrink-0 text-right w-16">
+        <div className="pl-3 sm:pl-6 shrink-0 text-right">
           <span>14.2 KB</span>
         </div>
       </div>

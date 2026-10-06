@@ -9,7 +9,20 @@ function MainContent() {
   const { bootState, setBootState, setThemeMode, setLightOn } = useThemeOS();
 
   if (bootState === "booting") {
-    return <BootScreen onComplete={() => setBootState("selection")} />;
+    return (
+      <BootScreen
+        onComplete={() => {
+          setThemeMode("light");
+          setLightOn(true);
+          const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+          if (isMobile) {
+            setBootState("desktop");
+          } else {
+            setBootState("selection");
+          }
+        }}
+      />
+    );
   }
 
   if (bootState === "selection") {

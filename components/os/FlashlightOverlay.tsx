@@ -21,7 +21,16 @@ export default function FlashlightOverlay() {
       setIsInside(true);
     };
 
+    const handleTouch = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        setMousePos({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+        if (!isInside) setIsInside(true);
+      }
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("touchstart", handleTouch, { passive: true });
+    window.addEventListener("touchmove", handleTouch, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
@@ -34,6 +43,8 @@ export default function FlashlightOverlay() {
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchstart", handleTouch);
+      window.removeEventListener("touchmove", handleTouch);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
     };
@@ -41,9 +52,10 @@ export default function FlashlightOverlay() {
 
   // CSS Radial Gradient that acts as a flashlight beam
   // The center is fully transparent, fading into absolute black.
+  const radius = typeof window !== "undefined" && window.innerWidth < 640 ? "150px" : "190px";
   const gradient = isInside
-    ? `radial-gradient(circle 180px at ${mousePos.x}px ${mousePos.y}px, rgba(0, 0, 0, 0) 0%, rgba(6, 6, 5, 0.1) 40%, rgba(6, 6, 5, 0.9) 80%, rgba(6, 6, 5, 0.99) 100%)`
-    : `radial-gradient(circle 180px at center, rgba(6, 6, 5, 0.99) 100%)`;
+    ? `radial-gradient(circle ${radius} at ${mousePos.x}px ${mousePos.y}px, rgba(0, 0, 0, 0) 0%, rgba(6, 6, 5, 0.1) 40%, rgba(6, 6, 5, 0.9) 80%, rgba(6, 6, 5, 0.99) 100%)`
+    : `radial-gradient(circle ${radius} at center, rgba(6, 6, 5, 0.99) 100%)`;
 
   return (
     <div

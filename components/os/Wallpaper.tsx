@@ -32,7 +32,7 @@ export default function Wallpaper() {
         href="/resume.pdf"
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute left-[44.2%] top-[32.2%] w-[12.0%] h-[13.5%] z-[10] cursor-pointer block hover:bg-black/5 active:bg-black/10 border border-transparent hover:border-black/15 transition-all duration-75 pointer-events-auto rounded-sm"
+        className="absolute left-[44.2%] top-[32.2%] w-[12.0%] h-[13.5%] z-[10] cursor-pointer block hover:bg-black/5 active:bg-black/10 border border-transparent hover:border-black/15 transition-all duration-75 pointer-events-auto rounded-sm touch-manipulation"
         title="Open Resume (resume.pdf)"
       />
     </div>

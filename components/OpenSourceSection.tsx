@@ -4,7 +4,7 @@ import React from "react";
 
 export default function OpenSourceSection() {
   return (
-    <div className="font-mono text-xs md:text-sm text-black whitespace-pre-wrap leading-relaxed select-text p-1">
+    <div className="font-mono text-[11px] sm:text-xs md:text-sm text-black whitespace-pre-wrap break-words leading-relaxed select-text p-1">
 {`CONTRIBUTIONS LOG
 =================
 Username: @adhikaryrachana00428-hash

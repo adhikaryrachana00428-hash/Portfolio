@@ -56,12 +56,12 @@ export default function VideoPlayerWindow() {
   return (
     <div className="w-full h-full bg-[#c0c0c0] font-sans text-xs text-black flex flex-col p-1">
       {/* 1. WMP Menu Bar */}
-      <div className="bg-[#c0c0c0] border-b border-[#808080] py-0.5 px-2 flex space-x-4 select-none shrink-0 font-medium font-sans">
-        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">File</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Play</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Favorites</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Go</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Help</span>
+      <div className="bg-[#c0c0c0] border-b border-[#808080] py-0.5 px-2 flex space-x-2 sm:space-x-4 select-none shrink-0 font-medium font-sans overflow-x-auto whitespace-nowrap text-[11px] sm:text-xs">
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">File</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">Play</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">Favorites</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">Go</span>
+        <span className="hover:bg-[#000080] hover:text-white px-1 sm:px-1.5 cursor-pointer">Help</span>
       </div>
 
       {/* 2. Video Frame Sunken screen */}

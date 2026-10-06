@@ -67,13 +67,13 @@ export default function BootScreen({ onComplete }: BootScreenProps) {
 
   if (phase === "bios") {
     return (
-      <div className="fixed inset-0 bg-black text-gray-300 font-mono text-[10px] sm:text-xs p-6 flex flex-col justify-start select-none z-50 uppercase leading-relaxed">
+      <div className="fixed inset-0 bg-black text-gray-300 font-mono text-[9px] sm:text-xs p-4 sm:p-6 flex flex-col justify-start select-none z-50 uppercase leading-relaxed overflow-x-hidden break-words">
         <div className="flex-1 space-y-1">
           {biosLines.map((line, idx) => (
-            <div key={idx}>{line}</div>
+            <div key={idx} className="break-all">{line}</div>
           ))}
         </div>
-        <div className="text-gray-500 text-[9px] mt-6 border-t border-gray-800 pt-2 text-right">
+        <div className="text-gray-500 text-[8px] sm:text-[9px] mt-4 sm:mt-6 border-t border-gray-800 pt-2 text-right">
           Press DEL to enter Setup
         </div>
       </div>
@@ -81,22 +81,22 @@ export default function BootScreen({ onComplete }: BootScreenProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#008080] flex flex-col items-center justify-center select-none z-50 text-black">
+    <div className="fixed inset-0 bg-[#008080] flex flex-col items-center justify-center select-none z-50 text-black p-4">
       {/* Cloud-like retro background drawing container */}
-      <div className="max-w-md w-full p-8 flex flex-col items-center text-center space-y-10 relative">
+      <div className="max-w-md w-full p-4 sm:p-8 flex flex-col items-center text-center space-y-6 sm:space-y-10 relative">
         {/* Startup Logo Header */}
         <div className="flex flex-col items-center">
-          <div className="text-5xl font-extrabold italic tracking-wider text-white drop-shadow-[2px_2px_0px_#000] select-none font-sans">
-            Rachana<span className="text-blue-900 text-6xl">95</span>
+          <div className="text-4xl sm:text-5xl font-extrabold italic tracking-wider text-white drop-shadow-[2px_2px_0px_#000] select-none font-sans">
+            Rachana<span className="text-blue-900 text-5xl sm:text-6xl">95</span>
           </div>
-          <div className="text-xs uppercase tracking-[0.3em] font-sans font-bold text-gray-200 mt-2 select-none">
+          <div className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] font-sans font-bold text-gray-200 mt-2 select-none">
             Microsoft Windows 95 Compatible
           </div>
         </div>
 
         {/* Loading Segmented Bar */}
-        <div className="w-64 flex flex-col items-center select-none">
-          <div className="w-full text-[10px] text-gray-200 mb-2 uppercase font-mono tracking-widest text-center animate-pulse">
+        <div className="w-56 sm:w-64 flex flex-col items-center select-none">
+          <div className="w-full text-[9px] sm:text-[10px] text-gray-200 mb-2 uppercase font-mono tracking-widest text-center animate-pulse">
             INITIALIZING WORKSPACE
           </div>
           

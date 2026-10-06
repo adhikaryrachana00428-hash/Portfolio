@@ -37,8 +37,8 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [bootState, setBootState] = useState<BootState>("booting");
-  const [themeMode, setThemeMode] = useState<ThemeMode>("dark");
-  const [lightOn, setLightOn] = useState<boolean>(false);
+  const [themeMode, setThemeMode] = useState<ThemeMode>("light");
+  const [lightOn, setLightOn] = useState<boolean>(true);
   const [activeWindows, setActiveWindows] = useState<WindowInstance[]>([]);
   const [maxZIndex, setMaxZIndex] = useState(10);
 
@@ -71,27 +71,30 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         );
       }
 
-      // Compute centered position
+      // Compute centered responsive position
       const screenWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
       const screenHeight = typeof window !== "undefined" ? window.innerHeight : 800;
+      const isMobile = screenWidth < 768;
       
-      const defaultWidth = 750;
-      const defaultHeight = 550;
-      const x = Math.max(50, (screenWidth - defaultWidth) / 2 + (prev.length * 20) % 100);
-      const y = Math.max(50, (screenHeight - defaultHeight) / 2 + (prev.length * 20) % 100);
+      const defaultWidth = isMobile ? Math.min(screenWidth - 16, 500) : 750;
+      const defaultHeight = isMobile ? Math.min(screenHeight - 70, 560) : 550;
+      const x = isMobile ? 8 : Math.max(20, (screenWidth - defaultWidth) / 2 + (prev.length * 20) % 100);
+      const y = isMobile ? 8 : Math.max(20, (screenHeight - defaultHeight) / 2 + (prev.length * 20) % 100);
 
       const newWin: WindowInstance = {
         id,
         title,
         isOpen: true,
         isMinimized: false,
-        isMaximized: false,
+        isMaximized: isMobile ? true : false,
         x,
         y,
-        width: defaultWidth,
-        height: defaultHeight,
+        width: isMobile ? "calc(100vw - 16px)" : defaultWidth,
+        height: isMobile ? "calc(100dvh - 60px)" : defaultHeight,
         zIndex: newZ,
         ...options,
+        // On mobile screens, always default to maximized so controls and content fit seamlessly
+        ...(isMobile ? { isMaximized: true } : {}),
       };
 
       return [...prev, newWin];

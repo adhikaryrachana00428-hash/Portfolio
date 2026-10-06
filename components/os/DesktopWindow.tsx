@@ -21,7 +21,7 @@ export default function DesktopWindow({ windowState, children }: DesktopWindowPr
   const openWins = activeWindows.filter(w => w.isOpen && !w.isMinimized);
   const isFocused = openWins.length > 0 && zIndex === Math.max(...openWins.map(w => w.zIndex));
 
-  const titleBtnClass = `w-4 h-4 bg-[#c0c0c0] win95-raised flex items-center justify-center text-black font-sans font-bold text-[10px] select-none focus:outline-none active:shadow-[inset_1px_1px_0_#000,inset_2px_2px_0_#808080] active:pt-0.5 active:pl-0.5 cursor-pointer`;
+  const titleBtnClass = `min-w-[22px] min-h-[22px] sm:min-w-[16px] sm:min-h-[16px] w-5 h-5 sm:w-4 sm:h-4 bg-[#c0c0c0] win95-raised flex items-center justify-center text-black font-sans font-bold text-[11px] sm:text-[10px] select-none focus:outline-none active:shadow-[inset_1px_1px_0_#000,inset_2px_2px_0_#808080] active:pt-0.5 active:pl-0.5 cursor-pointer touch-manipulation`;
 
   return (
     <motion.div
@@ -29,21 +29,28 @@ export default function DesktopWindow({ windowState, children }: DesktopWindowPr
       animate={{ 
         opacity: 1, 
         scale: 1,
-        x: isMaximized ? 0 : windowState.x,
-        y: isMaximized ? 0 : windowState.y,
+        x: isMaximized ? 0 : Math.max(4, windowState.x),
+        y: isMaximized ? 0 : Math.max(4, windowState.y),
         width: isMaximized ? "100%" : width,
-        height: isMaximized ? "calc(100vh - 40px)" : height, // calc for 40px taskbar
+        height: isMaximized 
+          ? "calc(100dvh - 40px - env(safe-area-inset-bottom, 0px))" 
+          : height,
       }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
       drag={!isMaximized}
       dragMomentum={false}
+      dragElastic={0.05}
       dragListener={false}
       dragControls={dragControls}
       onPointerDown={() => focusWindow(id)}
-      style={{ zIndex }}
+      style={{ 
+        zIndex,
+        maxWidth: isMaximized ? "100%" : "calc(100vw - 8px)",
+        maxHeight: "calc(100dvh - 40px - env(safe-area-inset-bottom, 0px))",
+      }}
       className={`fixed flex flex-col p-1 bg-[#c0c0c0] win95-raised overflow-hidden select-none border border-[#c0c0c0] ${
-        isMaximized ? "rounded-none border-0" : ""
+        isMaximized ? "rounded-none border-0 top-0 left-0 right-0" : ""
       }`}
     >
       {/* Title Bar (Draggable) */}
